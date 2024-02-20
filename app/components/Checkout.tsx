@@ -61,14 +61,22 @@ const Checkout = () => {
       {error ? (
         <div className="text-gray-900 flex items-center justify-center flex-col mt-24 ">
           <h1 className="text-xl font-bold">{error}</h1>
-          <div className="bg-teal-600 text-white py-1 px-4 rounded-md mt-10">
+          <div className="flex items-center justify-between w-full space-x-3">
             <button
               onClick={() => {
                 signIn();
               }}
-              className=""
+              className="bg-teal-900 text-white p-2 w-full my-2 rounded-md"
             >
               Sign in
+            </button>
+            <button
+              className="bg-gray-900 text-white p-2 w-full my-2 rounded-md"
+              onClick={() => {
+                cartStore.setOnCheckout("cart");
+              }}
+            >
+              Continue shopping
             </button>
           </div>
         </div>

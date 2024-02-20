@@ -36,28 +36,29 @@ export const useCartStore = create<CartState>()(
         })),
       addItem: (item: ICartTypes) =>
         set((state) => {
-          const existingItemIndex = state.cart.findIndex(
-            (c) => c.id === item.id
-          );
-          if (existingItemIndex !== -1) {
-            const updatedCart = [...state.cart];
-            updatedCart[existingItemIndex].quantity += item.quantity || 1;
-            return { ...state, cart: updatedCart };
-          } else {
+          const existingItem = state.cart.find((c) => c.id === item.id);
+          if (existingItem) {
             return {
               ...state,
-              cart: [
-                ...state.cart,
-                {
-                  id: item.id,
-                  name: item.name,
-                  price: item.price,
-                  image: item.image,
-                  quantity: item.quantity || 1,
-                },
-              ],
+              cart: state.cart.map((c) =>
+                c.id === existingItem.id
+                  ? { ...c, quantity: c.quantity + (item.quantity || 1) }
+                  : c
+              ),
             };
           }
+          return {
+            cart: [
+              ...state.cart,
+              {
+                id: item.id,
+                name: item.name,
+                price: item.price,
+                image: item.image,
+                quantity: item.quantity || 1,
+              },
+            ],
+          };
         }),
 
       removeItem: (id) =>
