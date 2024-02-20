@@ -22,6 +22,17 @@ const AddCart = ({ name, id, image, price }: ICartTypes) => {
       prevQuantity - 1 >= 0 ? prevQuantity - 1 : 0
     );
   };
+
+  const addItemToCart = () => {
+    cartStore.addItem({
+      id: id,
+      name: name,
+      image: image,
+      price: price,
+      quantity: quantity,
+    });
+  };
+
   return (
     <>
       <div className="flex flex-wrap items-center mb-6">
@@ -53,15 +64,7 @@ const AddCart = ({ name, id, image, price }: ICartTypes) => {
       </div>
       <div className="flex gap-4 mb-6">
         <button
-          onClick={() =>
-            cartStore.addItem({
-              id: id,
-              name: name,
-              image: image,
-              price: price,
-              quantity: quantity,
-            })
-          }
+          onClick={addItemToCart}
           className="w-full px-4 py-2 text-center text-gray-100 bg-teal-600 border border-transparent  rounded-lg"
         >
           Add to cart

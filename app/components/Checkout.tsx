@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import CheckoutForm from "./CheckoutForm";
 import OrderAnimation from "./OrderAnimation";
+import { signIn } from "next-auth/react";
 
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!
@@ -16,6 +17,7 @@ const Checkout = () => {
   const cartStore = useCartStore();
   const [clientSecret, setClientSecret] = useState("");
   const router = useRouter();
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     fetch("/api/create-payment-intent", {
@@ -33,7 +35,7 @@ const Checkout = () => {
           return response.json();
         }
         if (response.status === 403) {
-          router.push("/api/auth/signin");
+          setError("Please login first");
           throw new Error("Unauthorized");
         }
       })
@@ -56,13 +58,31 @@ const Checkout = () => {
 
   return (
     <div className="">
-      {!clientSecret && <OrderAnimation />}
-      {clientSecret && (
-        <div>
-          <Elements options={options} stripe={stripePromise}>
-            <CheckoutForm clientSecret={clientSecret} />
-          </Elements>
+      {error ? (
+        <div className="text-gray-900 flex items-center justify-center flex-col mt-24 ">
+          <h1 className="text-xl font-bold">{error}</h1>
+          <div className="bg-teal-600 text-white py-1 px-4 rounded-md mt-10">
+            <button
+              onClick={() => {
+                signIn();
+              }}
+              className=""
+            >
+              Sign in
+            </button>
+          </div>
         </div>
+      ) : (
+        <>
+          {!clientSecret && <OrderAnimation />}
+          {clientSecret && (
+            <div>
+              <Elements options={options} stripe={stripePromise}>
+                <CheckoutForm clientSecret={clientSecret} />
+              </Elements>
+            </div>
+          )}
+        </>
       )}
     </div>
   );
