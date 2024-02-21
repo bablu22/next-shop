@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { createJSONStorage, persist } from "zustand/middleware";
+import { persist } from "zustand/middleware";
 import { ICartTypes } from "./types/cartTypes";
 
 export interface CartItem {
@@ -22,6 +22,7 @@ type CartState = {
   setOnCheckout: (val: string) => void;
   clearCart: () => void;
 };
+
 export const useCartStore = create<CartState>()(
   persist(
     (set) => ({
@@ -75,7 +76,9 @@ export const useCartStore = create<CartState>()(
     }),
     {
       name: "cart-store",
-      storage: createJSONStorage(() => localStorage),
+      getStorage: () => localStorage,
+      serialize: (state) => JSON.stringify(state),
+      deserialize: (str) => JSON.parse(str),
     }
   )
 );

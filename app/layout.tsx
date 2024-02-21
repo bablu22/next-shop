@@ -7,6 +7,7 @@ import { options } from "@/pages/api/auth/[...nextauth]";
 import { ReactNode } from "react";
 import "remixicon/fonts/remixicon.css";
 import NextTopLoader from "nextjs-toploader";
+import Hydrate from "./components/Hydrate";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -25,9 +26,13 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <NextTopLoader showSpinner={false} color="#2D9596" />
-        <Nav user={session?.user} expires={session?.expires as string} />
-        <main className="py-2 sm:px-10 px-6 container mx-auto">{children}</main>
+        <Hydrate>
+          <NextTopLoader showSpinner={false} color="#2D9596" />
+          <Nav user={session?.user} expires={session?.expires as string} />
+          <main className="py-2 sm:px-10 px-6 container mx-auto">
+            {children}
+          </main>
+        </Hydrate>
       </body>
     </html>
   );
