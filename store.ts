@@ -76,9 +76,8 @@ export const useCartStore = create<CartState>()(
     }),
     {
       name: "cart-store",
-      getStorage: () => localStorage,
-      serialize: (state) => JSON.stringify(state),
-      deserialize: (str) => JSON.parse(str),
+      serialize: (state) => btoa(JSON.stringify(state)),
+      deserialize: (storedState) => JSON.parse(atob(storedState)),
     }
   )
 );
